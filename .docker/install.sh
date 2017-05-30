@@ -1,5 +1,5 @@
 #!/bin/bash
-cat /etc/hosts | grep docker.server &> /dev/null;
+cat /etc/hosts | grep $SERVER_NAME &> /dev/null;
 if [ $? == 0 ]; then
 	echo "Host writted";
 else
