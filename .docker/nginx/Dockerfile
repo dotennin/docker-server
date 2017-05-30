@@ -1,5 +1,8 @@
 FROM nginx:latest
 
+# RUN set -x \
+#     && apt-get update && apt-get install --no-install-recommends -yqq \
+# dnsmasq
 # Add the nginx configuration file to the container
 RUN rm /etc/nginx/conf.d/default.conf
 ADD nginx.tmpl /etc/nginx/conf.d/default.conf

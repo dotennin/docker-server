@@ -1,0 +1,74 @@
+version: '2'
+services:
+  nginx:
+    container_name: nginx
+    build: nginx
+    environment: 
+      NGINX_SERVER_NAME: '${SERVER_NAME}'
+      LETSENCRYPT: 'true'
+      VIRTUAL_HOST: app.192.168.33.10.nip.io
+    volumes:
+      - ./nginx/default.crt:/srv/config/fullchain.pem
+      - ./nginx/default.key:/srv/config/privkey.pem
+      - ./nginx/access.log:/var/log/nginx/${SERVER_NAME}.default.log
+      - ./nginx/error.log:/var/log/nginx/${SERVER_NAME}.error.log
+      # - /etc/hosts:/etc/hosts
+    volumes_from: 
+      - letsencrypt
+      - php
+    ports:
+      - '80:80'
+      - '443:443'
+    extra_hosts:
+      - "app.192.168.33.10.nip.io:127.0.0.1"
+      - "manage.192.168.33.10.nip.io:127.0.0.1"
+  php:
+    build: php
+    volumes:
+      - /php
+      - ../:/srv/www
+      - /run/mysqld
+      - ./php/php.log:/var/log/php.log
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+      - ./php/locale:/etc/default/locale
+    volumes_from:
+      - mysql-data
+    working_dir: /srv/www
+    links:
+      - mysql
+  
+  mysql:
+    container_name: mysql
+    build: mysql
+    # image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: '${SERVER_NAME}'
+      MYSQL_DATABASE: '${SERVER_NAME}'
+      MYSQL_USER: '${SERVER_NAME}'
+      MYSQL_PASSWORD: '${SERVER_NAME}'
+      SERVER_NAME: '${SERVER_NAME}'
+    expose: 
+      - '3306'
+    volumes_from:
+      - mysql-data
+    volumes:
+      - /run/mysqld
+      - ../:/srv/www
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - '3306:3306'
+  
+  mysql-data:
+    image: busybox
+    volumes:
+      - ./persistent/mysql:/var/lib/mysql
+  
+  letsencrypt:
+    container_name: letsencrypt
+    build: letsencrypt
+    volumes:
+        - ./persistent/letsencrypt:/etc/letsencrypt
+        - /var/lib/letsencrypt
+        - /srv/letsencrypt-webrootauth
+    command: root certonly --email ${SERVER_NAME}@gmail.com -d ${SERVER_NAME}.com -d www.${SERVER_NAME} --renew-by-default -a webroot --webroot-path /srv/letsencrypt-webrootauth --text --agree-tos --agree-dev-preview --server https://acme-v01.api.letsencrypt.org/directory
+

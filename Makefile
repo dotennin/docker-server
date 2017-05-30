@@ -13,10 +13,12 @@ test:
 
 
 
-.PHONY: install $(SERVER_NAME)
 install: 
 	export SERVER_NAME=$(SERVER_NAME)
-	docker-compose up  --build
+	chmod +x .docker/install.sh
+	.docker/install.sh
 
 remove: 
+	export SERVER_NAME=$(SERVER_NAME)
 	docker-compose down --rmi all
+	sudo sh -c "sed -i -e 's/127.0.0.1   $(SERVER_NAME)//g' /etc/hosts"
