@@ -21,6 +21,7 @@ install:
 
 .PHONY: remove
 remove: 
+	cd $(PWD)/.docker/ && \
 	docker-compose down --rmi all
 	sudo sh -c "sed -i -e 's/127.0.0.1   $(SERVER_NAME)//g' /etc/hosts"
 
