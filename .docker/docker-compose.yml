@@ -24,6 +24,7 @@ services:
       - "manage.192.168.33.10.nip.io:127.0.0.1"
   php:
     build: php
+    container_name: php
     volumes:
       - /php
       - ../:/srv/www

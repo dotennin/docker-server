@@ -3,29 +3,26 @@ MYSQL_ROOT_PASSWORD = ${SERVER_NAME}
 MYSQL_DATABASE      = ${SERVER_NAME}
 MYSQL_USER          = ${SERVER_NAME}
 MYSQL_PASSWORD      = ${SERVER_NAME}
-container_name     = $(shell echo $@)
-
-.PHONY: test
+text = /home/usr/
 test:
-	@echo ${container_name}
-	@echo $(SERVER_NAME)
+	@echo ${SERVER_NAME}
 	@echo ${MYSQL_USER}
 	@echo ${MYSQL_PASSWORD}
 	@echo ${MYSQL_DATABASE}
 	@echo ${MYSQL_ROOT_PASSWORD}
 
+
 .PHONY: install
 install: 
+	export SERVER_NAME=$(SERVER_NAME)
 	chmod +x .docker/install.sh
-	.docker/install.sh $(SERVER_NAME)
+	.docker/install.sh
 
 .PHONY: remove
 remove: 
+	export SERVER_NAME=$(SERVER_NAME)
 	docker-compose down --rmi all
 	sudo sh -c "sed -i -e 's/127.0.0.1   $(SERVER_NAME)//g' /etc/hosts"
-
-.PHONY: ssh $(t)
+.PHONY: ssh $(container_name)
 ssh:
-	docker exec -it $(filter-out $@,$(MAKECMDGOALS)) /bin/bash
-%:
-	@:
+	docker exec -it php /bin/bash
