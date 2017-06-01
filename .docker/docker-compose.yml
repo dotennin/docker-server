@@ -4,9 +4,9 @@ services:
     container_name: nginx
     build: nginx
     environment: 
-      NGINX_SERVER_NAME: '${SERVER_NAME}'
+      NGINX_SERVER_NAME: ${SERVER_NAME}
       LETSENCRYPT: 'true'
-      VIRTUAL_HOST: app.192.168.33.10.nip.io
+      VIRTUAL_HOST: ${SERVER_NAME}
     volumes:
       - ./nginx/default.crt:/srv/config/fullchain.pem
       - ./nginx/default.key:/srv/config/privkey.pem
@@ -19,9 +19,6 @@ services:
     ports:
       - '80:80'
       - '443:443'
-    extra_hosts:
-      - "app.192.168.33.10.nip.io:127.0.0.1"
-      - "manage.192.168.33.10.nip.io:127.0.0.1"
   php:
     build: php
     container_name: php
@@ -43,11 +40,11 @@ services:
     build: mysql
     # image: mariadb:latest
     environment:
-      MYSQL_ROOT_PASSWORD: '${SERVER_NAME}'
-      MYSQL_DATABASE: '${SERVER_NAME}'
-      MYSQL_USER: '${SERVER_NAME}'
-      MYSQL_PASSWORD: '${SERVER_NAME}'
-      SERVER_NAME: '${SERVER_NAME}'
+      MYSQL_ROOT_PASSWORD: ${SERVER_NAME}
+      MYSQL_DATABASE: ${SERVER_NAME}
+      MYSQL_USER: ${SERVER_NAME}
+      MYSQL_PASSWORD: ${SERVER_NAME}
+      SERVER_NAME: ${SERVER_NAME}
     expose: 
       - '3306'
     volumes_from:
