@@ -6,6 +6,8 @@ services:
     environment: 
       NGINX_SERVER_NAME: ${SERVER_NAME}
       LETSENCRYPT: 'true'
+      HTTPS_ONLY: 'false'
+      NGINX_ROOT: /var/www
       VIRTUAL_HOST: ${SERVER_NAME}
     volumes:
       - ./nginx/default.crt:/srv/config/fullchain.pem
@@ -24,14 +26,14 @@ services:
     container_name: php
     volumes:
       - /php
-      - ../:/srv/www
+      - ../:/var/www
       - /run/mysqld
       - ./php/php.log:/var/log/php.log
       - ./php/php.ini:/usr/local/etc/php/php.ini
       - ./php/locale:/etc/default/locale
     volumes_from:
       - mysql-data
-    working_dir: /srv/www
+    working_dir: /var/www
     links:
       - mysql
   
