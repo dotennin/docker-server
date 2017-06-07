@@ -1,13 +1,13 @@
 version: '2'
 services:
   nginx:
-    container_name: nginx
+    container_name: ${SERVER_NAME}.nginx
     build: nginx
     environment: 
       NGINX_SERVER_NAME: ${SERVER_NAME}
       LETSENCRYPT: 'true'
       HTTPS_ONLY: 'false'
-      NGINX_ROOT: /var/www
+      NGINX_ROOT: ${NGINX_ROOT}
       VIRTUAL_HOST: ${SERVER_NAME}
     volumes:
       - ./nginx/default.crt:/srv/config/fullchain.pem
@@ -23,22 +23,22 @@ services:
       - '443:443'
   php:
     build: php
-    container_name: php
+    container_name: ${SERVER_NAME}.php
     volumes:
       - /php
-      - ../:/var/www
+      - ../:${NGINX_ROOT}
       - /run/mysqld
       - ./php/php.log:/var/log/php.log
       - ./php/php.ini:/usr/local/etc/php/php.ini
       - ./php/locale:/etc/default/locale
     volumes_from:
       - mysql-data
-    working_dir: /var/www
+    working_dir: ${NGINX_ROOT}
     links:
       - mysql
   
   mysql:
-    container_name: mysql
+    container_name: ${SERVER_NAME}.mysql
     build: mysql
     # image: mariadb:latest
     environment:
@@ -64,7 +64,7 @@ services:
       - ./persistent/mysql:/var/lib/mysql
   
   letsencrypt:
-    container_name: letsencrypt
+    container_name: ${SERVER_NAME}.letsencrypt
     build: letsencrypt
     volumes:
         - ./persistent/letsencrypt:/etc/letsencrypt

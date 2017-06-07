@@ -3,11 +3,10 @@ MYSQL_ROOT_PASSWORD = ${SERVER_NAME}
 MYSQL_DATABASE      = ${SERVER_NAME}
 MYSQL_USER          = ${SERVER_NAME}
 MYSQL_PASSWORD      = ${SERVER_NAME}
-container_name     = $(shell echo $@)
-
+NGINX_ROOT          = /var/www
 .PHONY: test
 test:
-	@echo ${container_name}
+	@echo $(NGINX_ROOT)
 	@echo $(SERVER_NAME)
 	@echo ${MYSQL_USER}
 	@echo ${MYSQL_PASSWORD}
@@ -17,11 +16,12 @@ test:
 .PHONY: install
 install: 
 	chmod +x .docker/install.sh
-	.docker/install.sh $(SERVER_NAME)
+	.docker/install.sh $(SERVER_NAME) $(NGINX_ROOT)
 
 up:
 	cd $(PWD)/.docker/ && \
 		export SERVER_NAME=$(SERVER_NAME) && \
+		export NGINX_ROOT=$(NGINX_ROOT) && \
 		docker-compose up
 
 .PHONY: remove
@@ -32,6 +32,6 @@ remove:
 
 .PHONY: ssh $(t)
 ssh:
-	docker exec -it $(filter-out $@,$(MAKECMDGOALS)) /bin/bash
+	docker exec -it $(SERVER_NAME).$(filter-out $@,$(MAKECMDGOALS)) /bin/bash
 %:
 	@:

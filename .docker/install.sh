@@ -9,4 +9,5 @@ fi
 
 cd $PWD/.docker/ && \
 	export SERVER_NAME=$1 && \
+	export NGINX_ROOT=$2 && \
 	docker-compose up  --build --force-recreate 
