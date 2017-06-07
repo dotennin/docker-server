@@ -3,7 +3,8 @@ MYSQL_ROOT_PASSWORD = ${SERVER_NAME}
 MYSQL_DATABASE      = ${SERVER_NAME}
 MYSQL_USER          = ${SERVER_NAME}
 MYSQL_PASSWORD      = ${SERVER_NAME}
-NGINX_ROOT          = /var/www
+WORKING_DIR         = /var/www
+NGINX_ROOT          = ${WORKING_DIR}
 .PHONY: test
 test:
 	@echo $(NGINX_ROOT)
@@ -16,11 +17,12 @@ test:
 .PHONY: install
 install: 
 	chmod +x .docker/install.sh
-	.docker/install.sh $(SERVER_NAME) $(NGINX_ROOT)
+	.docker/install.sh $(SERVER_NAME) $(NGINX_ROOT) $(WORKING_DIR)
 
 up:
 	cd $(PWD)/.docker/ && \
 		export SERVER_NAME=$(SERVER_NAME) && \
+		export WORKING_DIR=$(WORKING_DIR) && \
 		export NGINX_ROOT=$(NGINX_ROOT) && \
 		docker-compose -p $(SERVER_NAME) up
 

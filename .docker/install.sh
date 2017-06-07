@@ -15,4 +15,5 @@ fi
 cd $PWD/.docker/ && \
 	export SERVER_NAME=$1 && \
 	export NGINX_ROOT=$2 && \
+	export WORKING_DIR=$3 && \
 	docker-compose -p $SERVER_NAME up --build --force-recreate 

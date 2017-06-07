@@ -28,14 +28,14 @@ services:
     container_name: ${SERVER_NAME}.php
     volumes:
       - /php
-      - ../:${NGINX_ROOT}
+      - ../:${WORKING_DIR}
       - /run/mysqld
       - ./php/php.log:/var/log/php.log
       - ./php/php.ini:/usr/local/etc/php/php.ini
       - ./php/locale:/etc/default/locale
     volumes_from:
       - mysql-data
-    working_dir: ${NGINX_ROOT}
+    working_dir: ${WORKING_DIR}
     links:
       - mysql
   
