@@ -7,6 +7,11 @@ else
 	sudo sh -c "echo '127.0.0.1   $1' >> /etc/hosts";
 fi
 
+docker network ls | grep nginx-net &> /dev/null
+if [ $? == 1 ]; then
+	docker network create nginx-net
+fi
+
 cd $PWD/.docker/ && \
 	export SERVER_NAME=$1 && \
 	export NGINX_ROOT=$2 && \
