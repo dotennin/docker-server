@@ -19,6 +19,11 @@ install:
 	chmod +x .docker/install.sh
 	.docker/install.sh $(SERVER_NAME)
 
+up:
+	cd $(PWD)/.docker/ && \
+		export SERVER_NAME=$(SERVER_NAME) && \
+		docker-compose up
+
 .PHONY: remove
 remove: 
 	cd $(PWD)/.docker/ && \
