@@ -22,13 +22,16 @@ up:
 	cd $(PWD)/.docker/ && \
 		export SERVER_NAME=$(SERVER_NAME) && \
 		export NGINX_ROOT=$(NGINX_ROOT) && \
-		docker-compose up
+		docker-compose -p $(SERVER_NAME) up
 
 .PHONY: remove
 remove: 
 	cd $(PWD)/.docker/ && \
-	docker-compose down --rmi all
+	docker-compose -p $(SERVER_NAME) down --rmi all
 	sudo sh -c "sed -i -e 's/127.0.0.1   $(SERVER_NAME)//g' /etc/hosts"
+down:
+	cd $(PWD)/.docker/ && \
+	docker-compose -p $(SERVER_NAME) down
 
 .PHONY: ssh $(t)
 ssh:
