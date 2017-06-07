@@ -8,7 +8,9 @@ services:
       LETSENCRYPT: 'true'
       HTTPS_ONLY: 'false'
       NGINX_ROOT: ${NGINX_ROOT}
-      VIRTUAL_HOST: ${SERVER_NAME}
+      VIRTUAL_HOST: ${SERVER_NAME},www.${SERVER_NAME}
+      LETSENCRYPT_HOST: ${SERVER_NAME},www.${SERVER_NAME}
+      LETSENCRYPT_EMAIL: wenhua4438@gmail.com
     volumes:
       - ./nginx/default.crt:/srv/config/fullchain.pem
       - ./nginx/default.key:/srv/config/privkey.pem
@@ -72,3 +74,7 @@ services:
         - /srv/letsencrypt-webrootauth
     command: root certonly --email ${SERVER_NAME}@gmail.com -d ${SERVER_NAME}.com -d www.${SERVER_NAME} --renew-by-default -a webroot --webroot-path /srv/letsencrypt-webrootauth --text --agree-tos --agree-dev-preview --server https://acme-v01.api.letsencrypt.org/directory
 
+networks:  
+    default:
+        external:
+            name: nginx-net
