@@ -16,7 +16,7 @@ services:
       - ./nginx/default.key:/srv/config/privkey.pem
       - ./nginx/access.log:/var/log/nginx/${SERVER_NAME}.default.log
       - ./nginx/error.log:/var/log/nginx/${SERVER_NAME}.error.log
-      # - /etc/hosts:/etc/hosts
+      - /etc/hosts:/etc/hosts
     volumes_from: 
       - letsencrypt
       - php
