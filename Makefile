@@ -29,7 +29,7 @@ up:
 .PHONY: remove
 remove: 
 	cd $(PWD)/.docker/ && \
-	docker-compose -p $(SERVER_NAME) down --rmi all
+	docker-compose -p $(SERVER_NAME) down
 	sudo sh -c "sed -i -e 's/127.0.0.1   $(SERVER_NAME)//g' /etc/hosts"
 down:
 	cd $(PWD)/.docker/ && \
