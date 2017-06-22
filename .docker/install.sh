@@ -20,4 +20,5 @@ cd $PWD/.docker/ && \
 	export MYSQL_DATABASE=$5 && \
 	export MYSQL_USER=$6 && \
 	export MYSQL_PASSWORD=$7 && \
+	export DOCKER_CONTENT_TRUST=1 && \
 	docker-compose -p $SERVER_NAME up --build --force-recreate 
