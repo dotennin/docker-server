@@ -17,13 +17,17 @@ test:
 .PHONY: install
 install: 
 	chmod +x .docker/install.sh
-	.docker/install.sh $(SERVER_NAME) $(NGINX_ROOT) $(WORKING_DIR)
+	.docker/install.sh $(SERVER_NAME) $(NGINX_ROOT) $(WORKING_DIR) $(MYSQL_ROOT_PASSWORD) $(MYSQL_DATABASE) $(MYSQL_USER) $(MYSQL_PASSWORD)
 
 up:
 	cd $(PWD)/.docker/ && \
 		export SERVER_NAME=$(SERVER_NAME) && \
-		export WORKING_DIR=$(WORKING_DIR) && \
 		export NGINX_ROOT=$(NGINX_ROOT) && \
+		export WORKING_DIR=$(WORKING_DIR) && \
+		export MYSQL_ROOT_PASSWORD=$(MYSQL_ROOT_PASSWORD) && \
+		export MYSQL_DATABASE=$(MYSQL_DATABASE) && \
+		export MYSQL_USER=$(MYSQL_USER) && \
+		export MYSQL_PASSWORD=$(MYSQL_PASSWORD) && \
 		docker-compose -p $(SERVER_NAME) up
 
 .PHONY: remove
@@ -34,6 +38,8 @@ remove:
 down:
 	cd $(PWD)/.docker/ && \
 	docker-compose -p $(SERVER_NAME) down
+monitor:
+	docker stats $(docker inspect -f {{.NAME}} $(docker ps -q))
 
 .PHONY: ssh $(t)
 ssh:

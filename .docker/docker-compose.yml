@@ -44,10 +44,10 @@ services:
     build: mysql
     # image: mariadb:latest
     environment:
-      MYSQL_ROOT_PASSWORD: ${SERVER_NAME}
-      MYSQL_DATABASE: ${SERVER_NAME}
-      MYSQL_USER: ${SERVER_NAME}
-      MYSQL_PASSWORD: ${SERVER_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       SERVER_NAME: ${SERVER_NAME}
     expose: 
       - '3306'
@@ -64,6 +64,7 @@ services:
     image: busybox
     volumes:
       - ./persistent/mysql:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
   
   letsencrypt:
     container_name: ${SERVER_NAME}.letsencrypt
