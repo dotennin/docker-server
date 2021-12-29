@@ -19,7 +19,17 @@ install:
 	chmod +x .docker/install.sh
 	.docker/install.sh $(SERVER_NAME) $(NGINX_ROOT) $(WORKING_DIR) $(MYSQL_ROOT_PASSWORD) $(MYSQL_DATABASE) $(MYSQL_USER) $(MYSQL_PASSWORD)
 
-up:
+init:
+	cd $(PWD)/.docker/ && \
+		export SERVER_NAME=$(SERVER_NAME) && \
+		export NGINX_ROOT=$(NGINX_ROOT) && \
+		export WORKING_DIR=$(WORKING_DIR) && \
+		export MYSQL_ROOT_PASSWORD=$(MYSQL_ROOT_PASSWORD) && \
+		export MYSQL_DATABASE=$(MYSQL_DATABASE) && \
+		export MYSQL_USER=$(MYSQL_USER) && \
+		export MYSQL_PASSWORD=$(MYSQL_PASSWORD)
+
+up: 
 	cd $(PWD)/.docker/ && \
 		export SERVER_NAME=$(SERVER_NAME) && \
 		export NGINX_ROOT=$(NGINX_ROOT) && \
@@ -28,14 +38,13 @@ up:
 		export MYSQL_DATABASE=$(MYSQL_DATABASE) && \
 		export MYSQL_USER=$(MYSQL_USER) && \
 		export MYSQL_PASSWORD=$(MYSQL_PASSWORD) && \
-		docker-compose -p $(SERVER_NAME) up
+		docker-compose -p $(SERVER_NAME) up -d
 
 .PHONY: remove
 remove: 
-	cd $(PWD)/.docker/ && \
-	docker-compose -p $(SERVER_NAME) down
+	docker-compose -p $(SERVER_NAME) down --rmi all --volumes
 	sudo sh -c "sed -i -e 's/127.0.0.1   $(SERVER_NAME)//g' /etc/hosts"
-down:
+down: 
 	cd $(PWD)/.docker/ && \
 	docker-compose -p $(SERVER_NAME) down
 monitor:
