@@ -49,7 +49,8 @@ down:
 	docker-compose -p $(SERVER_NAME) down
 monitor:
 	docker stats $(docker inspect -f {{.NAME}} $(docker ps -q))
-
+cleanup: 
+	docker system prune --all --volumes
 .PHONY: ssh $(t)
 ssh:
 	docker exec -it $(SERVER_NAME).$(filter-out $@,$(MAKECMDGOALS)) /bin/bash
