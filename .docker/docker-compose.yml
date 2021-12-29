@@ -41,8 +41,7 @@ services:
   
   mysql:
     container_name: ${SERVER_NAME}.mysql
-    build: mysql
-    # image: mariadb:latest
+    image: mariadb:latest
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -57,8 +56,13 @@ services:
       - /run/mysqld
       - ../:/srv/www
       - ./mysql/my.cnf:/etc/mysql/my.cnf
+      - ./mysql/initdb.d:/docker-entrypoint-initdb.d
     ports:
       - '3306:3306'
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp:unconfined
   
   mysql-data:
     image: busybox
@@ -74,4 +78,7 @@ services:
         - /var/lib/letsencrypt
         - /srv/letsencrypt-webrootauth
     command: root certonly --email ${SERVER_NAME}@gmail.com -d ${SERVER_NAME}.com -d www.${SERVER_NAME} --renew-by-default -a webroot --webroot-path /srv/letsencrypt-webrootauth --text --agree-tos --agree-dev-preview --server https://acme-v01.api.letsencrypt.org/directory
-
+networks:
+  default:
+    external: false
+    name: ${SERVER_NAME}
